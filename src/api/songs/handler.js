@@ -29,40 +29,51 @@ class SongsHandler {
       })
         .code(201);
     } catch (error) {
-      // client error
+      // if error instanceof ClientError
       if (error instanceof ClientError) {
-        return h.response({
-          status: 'fail',
-          message: error.message,
-        })
-          .code(error.statusCode);
+        throw error;
       }
 
-      // server error
+      // Server error
       console.log(error);
       return h.response({
         status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
       })
         .code(500);
     }
   }
 
-  async getSongsHandler() {
-    const songs = await this.service.getSongs();
+  async getSongsHandler(request, h) {
+    try {
+      const songs = await this.service.getSongs();
 
-    return {
-      status: 'success',
-      data: {
-        songs,
-      },
-    };
+      return {
+        status: 'success',
+        data: {
+          songs,
+        },
+      };
+    } catch (error) {
+      // if error instanceof ClientError
+      if (error instanceof ClientError) {
+        throw error;
+      }
+
+      // Server error
+      console.log(error);
+      return h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      })
+        .code(500);
+    }
   }
 
   async getSongByIdHandler(request, h) {
-    const { id } = request.params;
-
     try {
+      const { id } = request.params;
+
       const song = await this.service.getSongById(id);
 
       return {
@@ -72,20 +83,16 @@ class SongsHandler {
         },
       };
     } catch (error) {
-      // client error
+      // if error instanceof ClientError
       if (error instanceof ClientError) {
-        return h.response({
-          status: 'fail',
-          message: error.message,
-        })
-          .code(error.statusCode);
+        throw error;
       }
 
-      // server error
+      // Server error
       console.log(error);
       return h.response({
         status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
       })
         .code(500);
     }
@@ -111,29 +118,25 @@ class SongsHandler {
         message: 'Lagu berhasil diperbarui',
       };
     } catch (error) {
-      // client error
+      // if error instanceof ClientError
       if (error instanceof ClientError) {
-        return h.response({
-          status: 'fail',
-          message: error.message,
-        })
-          .code(error.statusCode);
+        throw error;
       }
 
-      // server error
+      // Server error
       console.log(error);
       return h.response({
         status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
       })
         .code(500);
     }
   }
 
   async deleteSongByIdHandler(request, h) {
-    const { id } = request.params;
-
     try {
+      const { id } = request.params;
+
       await this.service.deleteSongById(id);
 
       return {
@@ -141,20 +144,16 @@ class SongsHandler {
         message: 'Lagu berhasil dihapus',
       };
     } catch (error) {
-      // client error
+      // if error instanceof ClientError
       if (error instanceof ClientError) {
-        return h.response({
-          status: 'fail',
-          message: error.message,
-        })
-          .code(error.statusCode);
+        throw error;
       }
 
-      // server error
+      // Server error
       console.log(error);
       return h.response({
         status: 'error',
-        message: 'Maaf, terjadi kegagalan pada server kami',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
       })
         .code(500);
     }

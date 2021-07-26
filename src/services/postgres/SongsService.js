@@ -10,7 +10,7 @@ class SongsService {
   }
 
   async addSong(title, year, performer, genre, duration) {
-    const id = nanoid(16);
+    const id = `song-${nanoid(16)}`;
     const insertedAt = new Date().toISOString();
     const updatedAt = insertedAt;
 
@@ -21,7 +21,7 @@ class SongsService {
     const result = await this.pool.query(query);
 
     // if not success add new music
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new InvariantError('Lagu gagal ditambahkan');
     }
 
@@ -41,7 +41,7 @@ class SongsService {
     const result = await this.pool.query(query);
 
     // if not exists song
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
@@ -77,7 +77,7 @@ class SongsService {
     const result = await this.pool.query(query);
 
     // if not success edit
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
   }
@@ -90,8 +90,21 @@ class SongsService {
     const result = await this.pool.query(query);
 
     // if not success delete
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Lagu gagal dihapus. Id tidak ditemukan');
+    }
+  }
+
+  async verifyValidSongId(id) {
+    const query = {
+      text: 'SELECT id FROM songs WHERE id = $1',
+      values: [id],
+    };
+    const result = await this.pool.query(query);
+
+    // if not exists song
+    if (!result.rows.length) {
+      throw new InvariantError('Id lagu tidak valid');
     }
   }
 }
